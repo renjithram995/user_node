@@ -1,10 +1,11 @@
 const userModel = require('../dbmodels/usermodel')
 const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
+const config = require('../../config.json')
 
 const getusers = () => {
     return new Promise((resolve, reject) => {
         userModel.find().then((data) => {
-            console.log(data)
             resolve(data)
         }).catch((err) => {
             reject(err)
@@ -42,7 +43,7 @@ const insertUser = (userData) => {
 const validateLogin = (userData) => {
     return new Promise((resolve, reject) => {
         if (!userData.username) {
-            resolve('Invalid username')
+            reject('Invalid username')
             return;
         }
         const filter = {
@@ -50,15 +51,36 @@ const validateLogin = (userData) => {
         }
         userModel.findOne(filter).then(async (data) => {
             if (!data || !data.password) {
-                resolve('Invalid user credentials')
+                reject('Invalid user credentials')
                 return;
             }
             const validUser = await bcrypt.compare(userData.password, data.password)
-            resolve(validUser ? 'Login success' : 'Login failed')
+            if (validUser) {
+                const payload = {
+                    username: userData.username,
+                    name: userData.name,
+                    age: userData.age,
+                    place: userData.place
+                }
+                const token = jwt.sign(payload, config.secretKey)
+                console.log(token)
+                validateToken(token)
+                resolve({
+                    ...payload,
+                    accesstoken: token
+                })
+            } else {
+                reject('Login failed')
+            }
         }).catch((err) => {
             reject(err.message || 'Unknown error occured')
         })
     })
+}
+
+const validateToken = (token) => {
+    const abc = jwt.verify(token, config.secretKey)
+    const ab = jwt.decode(token)
 }
 
 module.exports = {
