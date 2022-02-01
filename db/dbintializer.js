@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
-const dbName = 'db_user_01'; //
-const dbUrl = 'mongodb://localhost:27017/';
+const config = require('../config.json')
+const dbName = config.dbName || 'db_user_01'; //
+const dbUrl = config.dbUrl || 'mongodb://localhost:27017/';
 const mongoOptions = {
   useNewUrlParser: true,
   useUnifiedTopology: true

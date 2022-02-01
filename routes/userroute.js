@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getusers, insertUser, validateLogin } = require("../db/dbmethods/usermethods")
+const { getusers, insertUser } = require("../db/dbmethods/usermethods")
 const { successResponse, throwException } = require("../db/dbcommonmethods")
 
 router.get('/users', (req, res) => {
@@ -13,7 +13,6 @@ router.get('/users', (req, res) => {
 })
 
 router.post('/users', (req, res) => {
-
     insertUser(req.body).then((a) => {
         successResponse(res, a)
     }).catch((err) => {
@@ -21,12 +20,4 @@ router.post('/users', (req, res) => {
     })
 })
 
-router.post('/validateuser', (req, res) => {
-
-    validateLogin(req.body).then((a) => {
-        successResponse(res, a)
-    }).catch((err) => {
-        throwException(res, err)
-    })
-})
 module.exports = router

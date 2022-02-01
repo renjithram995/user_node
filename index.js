@@ -1,11 +1,11 @@
 const express = require('express');
 const cookieParser = require('cookie-parser');
-const routeshandler = require('./routeshandler');
-const initializeDb = require('./db/dbintializer');
 var cors = require('cors');
-
-
+const routeshandler = require('./routeshandler');
 const app = express()
+
+const initializeDb = require('./db/dbintializer');
+
 app.use(express.json({ limit: '1024mb' }));
 app.use(express.urlencoded({ limit: '1024mb', extended: true }));
 app.use(cookieParser());
