@@ -1,6 +1,8 @@
 const successResponse = function (res, data) {
     res.status(200)
-    res.send(data)
+    res.send({
+        data: data
+    })
 }
 
 const throwException = (res, errorMessage) => {
